@@ -11,6 +11,12 @@ These experiments use different image types, labels, and modeling tasks. The mal
 
 The notebook in [`malaria_cell_images_classification.ipynb`](malaria_cell_images_classification.ipynb) walks through the runnable pipeline. The training and prediction code is also available in [`train_malaria_classifier.py`](train_malaria_classifier.py) and [`predict_malaria.py`](predict_malaria.py). It uses the public Malaria dataset distributed through TensorFlow Datasets; the first run downloads the dataset automatically.
 
+Examples from the original cell-image notebook:
+
+| Parasitized | Uninfected |
+|:---:|:---:|
+| ![Example parasitized cells](assets/malaria-parasitized-examples.png) | ![Example uninfected cells](assets/malaria-uninfected-examples.png) |
+
 ### Setup
 
 Python 3.10 or 3.11 is recommended. From the repository root:
@@ -54,6 +60,12 @@ The model reports the predicted class and its estimated parasitized probability.
 ## Mucosal image detection dataset
 
 The [`mucosa-yolo-dataset/`](mucosa-yolo-dataset/) directory contains 690 images and matching YOLO text labels: 585 train, 45 validation, and 60 test. Its dataset-specific README describes the export, license, structure, and current annotation uncertainties.
+
+Examples from that separate dataset (shown by their filenames):
+
+| Filename marked positive | Filename marked negative |
+|:---:|:---:|
+| ![Mucosal image with positive in its filename](mucosa-yolo-dataset/train/images/test_positive_101_jpg.rf.572d8ed225cb10c2395e6afc36ca0736.jpg) | ![Mucosal image with neg in its filename](mucosa-yolo-dataset/train/images/test_neg_0_jpg.rf.47e14b8bf017a6a291325c26e47a1f66.jpg) |
 
 The image filenames include `positive` and `neg`, but the exported YAML defines three classes (`-1`, `0`, `1`). Their exact relationship to healthy/diseased tissue has not been verified. Treat the dataset as an archived export until its class mapping is confirmed; do not use it to train the malaria classifier or infer a medical diagnosis.
 
