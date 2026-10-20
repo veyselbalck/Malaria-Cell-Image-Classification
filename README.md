@@ -1,75 +1,74 @@
-# 🦠 Malaria Cell Images Classification  
+# Medical Image Analysis Projects
 
-This project was developed as part of the course **BMÜ459 – Multimedia Computing** at **Fırat University** (October 2023 – February 2024).  
-The aim of the graduation project is to classify cell images infected with malaria.  
-In this image processing project, healthy and infected cells were classified using image processing and deep learning technologies.  
+An educational computer vision repository containing two independent experiments from a multimedia computing course:
 
-## 📌 Features  
-- CNN-based deep learning model (**TensorFlow & Keras**)  
-- Visualization and preprocessing of cell images  
-- Training and validation performance graphs  
-- Accuracy and loss reporting for the model  
+1. **Malaria cell classification** — a TensorFlow/Keras CNN classifies individual red blood cell images as parasitized or uninfected.
+2. **Mucosal image detection dataset** — a Roboflow YOLOv7-format export with train/validation/test images and bounding-box labels. It is kept as a separate dataset because its images and annotations do not belong to the malaria cell classifier.
 
-## 🚀 Usage  
-1. Install the required libraries:  
-    ```sh
-    pip install tensorflow matplotlib opencv-python
-    ```  
-2. Open the Jupyter Notebook:  
-    ```sh
-    jupyter notebook malaria_cell_images_classification.ipynb
-    ```  
-3. Follow the steps in the notebook to:  
-   - Load the dataset  
-   - Train the model  
-   - Review the results  
+These experiments use different image types, labels, and modeling tasks. The malaria training script does not read the YOLO dataset.
 
-## 📂 Dataset  
-- [Malaria Cell Images Dataset (Kaggle)](https://www.kaggle.com/datasets/iarunava/cell-images-for-detecting-malaria)  
-- Data loading via Google Drive integration in the notebook  
+## Malaria cell classification
 
-## 📊 Results  
-- High accuracy achieved on validation data  
-- Training and validation loss visualized with graphs  
+The notebook in [`malaria_cell_images_classification.ipynb`](malaria_cell_images_classification.ipynb) walks through the runnable pipeline. The training and prediction code is also available in [`train_malaria_classifier.py`](train_malaria_classifier.py) and [`predict_malaria.py`](predict_malaria.py). It uses the public Malaria dataset distributed through TensorFlow Datasets; the first run downloads the dataset automatically.
 
-## 📄 License  
-This project is for **educational purposes only**.  
+### Setup
 
----
+Python 3.10 or 3.11 is recommended. From the repository root:
 
-# 🩺 Sıtma Hücre Görüntülerinin Sınıflandırılması  
+```bash
+python -m venv .venv
+```
 
-Bu proje, **BMÜ459 – Çoklu Ortam Hesaplama** dersi kapsamında **Fırat Üniversitesi**'nde (Ekim 2023 – Şubat 2024) geliştirilmiştir.  
-Bitirme projesinin amacı, sıtma ile enfekte olmuş hücrelerin görüntülerini sınıflandırmaktır.  
-Bu görüntü işleme projesinde, sağlıklı ve hastalıklı hücrelerin sınıflandırılması görüntü işleme ve derin öğrenme teknolojileri kullanılarak gerçekleştirilmiştir.  
+Activate the environment, then install the dependencies:
 
-## 📌 Özellikler  
-- CNN tabanlı derin öğrenme modeli (**TensorFlow & Keras**)  
-- Hücre görüntülerinin görselleştirilmesi ve ön işlenmesi  
-- Eğitim ve doğrulama performans grafiklerinin gösterilmesi  
-- Modelin doğruluk ve kayıp değerlerinin raporlanması  
+```bash
+# Windows PowerShell
+.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
 
-## 🚀 Kullanım  
-1. Gerekli kütüphaneleri yükleyin:  
-    ```sh
-    pip install tensorflow matplotlib opencv-python
-    ```  
-2. Jupyter Notebook'u açın:  
-    ```sh
-    jupyter notebook malaria_cell_images_classification.ipynb
-    ```  
-3. Notebook adımlarını takip ederek:  
-   - Veri setini yükleyin  
-   - Modeli eğitin  
-   - Sonuçları inceleyin  
+```bash
+# macOS / Linux
+source .venv/bin/activate
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
 
-## 📂 Veri Seti  
-- [Malaria Cell Images Dataset (Kaggle)](https://www.kaggle.com/datasets/iarunava/cell-images-for-detecting-malaria)  
-- Notebook içinde Google Drive entegrasyonu ile veri yüklenmektedir.  
+### Train and evaluate
 
-## 📊 Sonuçlar  
-- Model, doğrulama verisinde yüksek doğruluk oranı sağlamaktadır  
-- Eğitim ve doğrulama kayıpları grafiklerle gösterilmiştir  
+```bash
+python train_malaria_classifier.py --epochs 20 --batch-size 128
+```
 
-## 📄 Lisans  
-Bu proje **eğitim amaçlıdır**.  
+The script creates `outputs/best_model.keras`, `outputs/metrics.json`, and `outputs/model_info.json`. The first run needs an internet connection to download the dataset. Training can run on CPU, though it will be slower than on a supported GPU.
+
+### Predict one cell image
+
+```bash
+python predict_malaria.py path/to/cell.png
+```
+
+The model reports the predicted class and its estimated parasitized probability. The default decision threshold is 0.5; adjust it with `--threshold` if needed.
+
+## Mucosal image detection dataset
+
+The [`mucosa-yolo-dataset/`](mucosa-yolo-dataset/) directory contains 690 images and matching YOLO text labels: 585 train, 45 validation, and 60 test. Its dataset-specific README describes the export, license, structure, and current annotation uncertainties.
+
+The image filenames include `positive` and `neg`, but the exported YAML defines three classes (`-1`, `0`, `1`). Their exact relationship to healthy/diseased tissue has not been verified. Treat the dataset as an archived export until its class mapping is confirmed; do not use it to train the malaria classifier or infer a medical diagnosis.
+
+## Previous notebook result
+
+The archived original notebook at [`notebooks/archive/original_colab_experiment.ipynb`](notebooks/archive/original_colab_experiment.ipynb) contains a historical run that reached **96.14% validation accuracy** after 20 epochs. This is a validation result from a random image-level split, not an independent test result or evidence of clinical performance. That experiment does not report an independent test set, sensitivity, specificity, or patient-level evaluation. Run the script above to obtain fresh metrics; do not compare results across pipelines without matching the split and evaluation method.
+
+## Data and license notes
+
+- The malaria cell images come from the [Malaria Cell Images Dataset on Kaggle](https://www.kaggle.com/datasets/iarunava/cell-images-for-detecting-malaria), accessed through TensorFlow Datasets. Review the dataset source terms before reuse.
+- The separate mucosal dataset was exported from [Roboflow Universe – odev2 v1](https://universe.roboflow.com/dev-v4x4g/odev2/dataset/1). Its export metadata states **CC BY 4.0**; attribution is included in the dataset notes.
+- No trained model weights are committed. Training outputs are local artifacts and are excluded from Git.
+- The source code does not yet declare a reuse license. The mucosal dataset's CC BY 4.0 license applies to that dataset, not automatically to the code or malaria images.
+- This repository is for education and research. It is not a medical device or diagnostic tool.
+
+## Türkçe özet
+
+Bu depoda iki ayrı çalışma bulunur: sıtmalı hücre görüntülerini sınıflandıran CNN kodu ve mukoza görüntülerine ait bağımsız bir YOLOv7 veri seti. İki veri seti aynı modelde kullanılmaz. Sıtma modeli `python train_malaria_classifier.py` komutuyla eğitilir; ilk çalıştırmada veri TensorFlow Datasets üzerinden indirilir. Mukoza verisinin sınıf eşleşmesi doğrulanmadığı için tanı veya model başarısı iddiası olarak yorumlanmamalıdır.

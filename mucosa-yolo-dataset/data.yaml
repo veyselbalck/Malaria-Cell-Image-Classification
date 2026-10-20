@@ -1,0 +1,13 @@
+train: train/images
+val: valid/images
+test: test/images
+
+nc: 3
+names: ['-1', '0', '1']
+
+roboflow:
+  workspace: dev-v4x4g
+  project: odev2
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/dev-v4x4g/odev2/dataset/1

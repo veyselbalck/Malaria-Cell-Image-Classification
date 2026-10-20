@@ -1,0 +1,19 @@
+.venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+outputs/
+*.keras
+*.h5
+*.pt
+*.pth
+*.onnx
+*.cache
+
+# Keep dataset files only in the documented mucosa-yolo-dataset/ folder.
+/train/
+/valid/
+/test/
+/data.yaml
+/README.dataset.txt
+/README.roboflow.txt
